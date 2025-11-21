@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: VR Therapy Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- 
+    Application Structure Plan: This SPA is a linear, top-to-bottom infographic. The narrative flow guides the user from the high-level concept (What is VR Therapy Center?) through the core design pillars (How is it safe and accessible?) and into the specific data-driven section: the therapeutic minigames. This data is visualized using an interactive radar chart to compare the therapeutic focus of each activity and a bar chart to show the target platforms. This linear, story-driven structure is chosen over a dashboard because an infographic's goal is presentation and quick digestion of a pre-defined story.
+    Visualization & Content Choices: 
+    1. GDD Concept -> Goal: Inform -> Viz: Large text header + logo. Method: HTML/Tailwind. Justification: Clear hook.
+    2. Design Pillars -> Goal: Compare -> Viz: 3-column card layout with Unicode icons (🥇, 🌌, ✋). Method: HTML/Tailwind (No SVG). Justification: Clearly segments the core philosophy.
+    3. Core Loop -> Goal: Organize (Process) -> Viz: HTML Flowchart (divs with '↓'). Method: HTML/Tailwind (No SVG/Mermaid). Justification: Simple, clear process flow.
+    4. Therapeutic Focus (8 Minigames) -> Goal: Compare -> Viz: Interactive Radar Chart. Method: Chart.js/Canvas. Justification: Best way to visualize multi-axial data. JS updates chart on button click. Labels are wrapped per 16-char requirement.
+    5. Platform Priority -> Goal: Inform/Compare -> Viz: Horizontal Bar Chart. Method: Chart.js/Canvas. Justification: Clearly shows the high priority of Quest 2.
+    6. Testing Strategy -> Goal: Organize (Process) -> Viz: 4-step timeline. Method: HTML/Tailwind cards (No SVG). Justification: Shows progression clearly.
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    Chosen Palette: Custom Cybertronix (Primary: #10BAD4, Secondary: #C3D52A)
+    -->
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        CybertronixBlue: '#10BAD4',
+                        CybertronixGreen: '#C3D52A',
+                        darkText: '#1C2B3A',
+                        lightBg: '#F0F9FF', 
+                        cardBg: '#FFFFFF',
+                        accentGray: '#94A3B8',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: 0, transform: 'translateY(10px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 24rem; 
+            max-height: 400px; 
+        }
+        .chart-container-radar {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 24rem; 
+            max-height: 500px; 
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 20rem;
+            }
+            .chart-container-radar {
+                height: 30rem;
+            }
+        }
+        .therapy-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .therapy-btn.active {
+            background-color: #10BAD4 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 14px 0 rgba(16, 186, 212, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-lightBg text-darkText font-sans antialiased">
+
+    <!-- Header & Hook -->
+    <header class="bg-cardBg py-10 md:py-16">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <img src="image_43fcab.png" alt="Logo de Cybertronix" class="h-20 w-auto mx-auto mb-6" onerror="this.src='https://placehold.co/200x80/10BAD4/white?text=Cybertronix'">
+            <h1 class="text-4xl md:text-6xl font-black text-CybertronixBlue mb-4">
+                VR Therapy Center
+            </h1>
+            <p class="text-xl md:text-2xl text-darkText font-light max-w-3xl mx-auto">
+                Una nueva era en la rehabilitación física. Hacemos que la terapia sea <span class="font-semibold text-CybertronixGreen">divertida, accesible y eficiente</span> para todas las edades.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-6 space-y-16 md:space-y-24 mt-12">
+
+        <!-- Sección 1: Pilares del Diseño -->
+        <section>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Diseñado para el Paciente</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Pilar 1: Comodidad -->
+                <div class="bg-cardBg p-6 rounded-lg shadow-lg border-l-4 border-CybertronixBlue">
+                    <div class="text-5xl mb-3">🥇</div>
+                    <h3 class="text-2xl font-bold mb-2">Comodidad Primero</h3>
+                    <p class="text-accentGray">La prioridad #1 es <span class="font-semibold text-darkText">cero mareo</span>. El diseño por defecto es sentado, con teletransporte y giro "snap-turn" para una accesibilidad total.</p>
+                </div>
+                <!-- Pilar 2: Accesibilidad -->
+                <div class="bg-cardBg p-6 rounded-lg shadow-lg border-l-4 border-CybertronixGreen">
+                    <div class="text-5xl mb-3">✋</div>
+                    <h3 class="text-2xl font-bold mb-2">Interacción Accesible</h3>
+                    <p class="text-accentGray">UI simple con iconos grandes. El agarre <span class="font-semibold text-darkText">"toggle"</span> (presionar una vez) evita la fatiga en manos con debilidad.</p>
+                </div>
+                <!-- Pilar 3: Inmersión -->
+                <div class="bg-cardBg p-6 rounded-lg shadow-lg border-l-4 border-CybertronixBlue">
+                    <div class="text-5xl mb-3">🌌</div>
+                    <h3 class="text-2xl font-bold mb-2">Entorno Amigable</h3>
+                    <p class="text-accentGray">Entornos brillantes, coloridos y relajantes. Evitamos diseños <span class="font-semibold text-darkText">"clínicos" u "hospitalarios"</span> para reducir la ansiedad.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Flujo de Experiencia -->
+        <section>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">La Experiencia del Paciente</h2>
+            <div class="flex flex-col items-center space-y-4">
+                <div class="bg-cardBg p-6 rounded-lg shadow-lg w-full md:w-3/4 text-center">
+                    <span class="text-xs font-semibold text-CybertronixBlue uppercase">Paso 1</span>
+                    <h3 class="text-2xl font-bold">Tutorial de Bienvenida</h3>
+                    <p class="text-accentGray">Una voz guía enseña a moverse y agarrar en un entorno seguro.</p>
+                </div>
+                <div class="text-5xl font-thin text-accentGray">↓</div>
+                <div class="bg-CybertronixBlue text-white p-8 rounded-lg shadow-xl w-full md:w-3/4 text-center">
+                    <span class="text-xs font-semibold text-lightBg uppercase">Paso 2</span>
+                    <h3 class="text-2xl font-bold">Sala Inicio (Hub Central)</h3>
+                    <p class="opacity-90">Un espacio relajante para elegir la actividad de terapia del día.</p>
+                </div>
+                <div class="text-5xl font-thin text-accentGray">↓</div>
+                <div class="bg-cardBg p-6 rounded-lg shadow-lg w-full md:w-3/4 text-center">
+                    <span class="text-xs font-semibold text-CybertronixGreen uppercase">Paso 3</span>
+                    <h3 class="text-2xl font-bold">Salas de Actividades</h3>
+                    <p class="text-accentGray">Minijuegos terapéuticos diseñados para objetivos específicos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 3: El Corazón de la Terapia (Datos) -->
+        <section>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">El Corazón de la Terapia</h2>
+            <p class="text-lg text-accentGray text-center mb-10 max-w-2xl mx-auto">
+                Cada actividad es un "Exergame" diseñado para un objetivo terapéutico. Selecciona una actividad para ver su perfil de enfoque.
+            </p>
+            
+            <!-- Botones de Selección -->
+            <div id="therapy-buttons" class="flex flex-wrap justify-center gap-3 mb-8">
+                <button data-therapy="gimnasia" class="therapy-btn active bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🏋️ Gimnasia</button>
+                <button data-therapy="rumba" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">💃 Rumba</button>
+                <button data-therapy="bolos" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🎳 Bolos</button>
+                <button data-therapy="espadas" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">⚔️ Espadas</button>
+                <button data-therapy="basket" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🏀 Basket</button>
+                <button data-therapy="disparo" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🎯 Disparo</button>
+                <button data-therapy="boxeo" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🥊 Boxeo</button>
+                <button data-therapy="meditacion" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🧘 Meditación</button>
+            </div>
+
+            <!-- Gráfico y Contexto -->
+            <div class="bg-cardBg p-6 rounded-lg shadow-xl">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                    <div class="chart-container-radar">
+                        <canvas id="therapyRadarChart"></canvas>
+                    </div>
+                    <div id="therapy-context" class="animate-fade-in">
+                        <h3 id="therapy-title" class="text-3xl font-bold text-CybertronixBlue mb-3"></h3>
+                        <p id="therapy-description" class="text-lg text-accentGray"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 4: Plataforma y Rendimiento -->
+        <section>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Rendimiento y Plataforma</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="bg-cardBg p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-4">Plataformas Objetivo</h3>
+                    <p class="text-accentGray mb-6">El desarrollo se centra en la plataforma <span class="font-semibold text-darkText">Meta Quest 2</span> debido a su gran base instalada, asegurando compatibilidad con Quest 3.</p>
+                    <div class="chart-container">
+                        <canvas id="platformBarChart"></canvas>
+                    </div>
+                </div>
+                 <div class="space-y-4">
+                    <div class="bg-cardBg p-6 rounded-lg shadow-lg flex items-center">
+                        <span class="text-4xl mr-4">📈</span>
+                        <div>
+                            <h4 class="text-xl font-bold">FPS Objetivo: 72-90</h4>
+                            <p class="text-accentGray">Un framerate estable es vital para prevenir el mareo.</p>
+                        </div>
+                    </div>
+                    <div class="bg-cardBg p-6 rounded-lg shadow-lg flex items-center">
+                        <span class="text-4xl mr-4">💡</span>
+                        <div>
+                            <h4 class="text-xl font-bold">Iluminación Optimizada</h4>
+                            <p class="text-accentGray">Uso de "Baked Lighting" para máximo rendimiento en móvil.</p>
+                        </div>
+                    </div>
+                    <div class="bg-cardBg p-6 rounded-lg shadow-lg flex items-center">
+                        <span class="text-4xl mr-4">👁️</span>
+                        <div>
+                            <h4 class="text-xl font-bold">Renderizado SPIR</h4>
+                            <p class="text-accentGray">Single-Pass Instanced Rendering para renderizar ambos ojos a la vez.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 5: Estrategia de Validación -->
+        <section>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Estrategia de Validación</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-cardBg p-6 rounded-lg shadow text-center">
+                    <div class="bg-CybertronixBlue text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">1</div>
+                    <h4 class="font-bold">Prototipo de Confort</h4>
+                    <p class="text-sm text-accentGray">Probar solo locomoción. Métrica: Cero mareos.</p>
+                </div>
+                <div class="bg-cardBg p-6 rounded-lg shadow text-center">
+                    <div class="bg-CybertronixBlue text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">2</div>
+                    <h4 class="font-bold">Prototipo de Interacción</h4>
+                    <p class="text-sm text-accentGray">Probar agarre "toggle" y UI. Métrica: Cero fatiga.</p>
+                </div>
+                <div class="bg-cardBg p-6 rounded-lg shadow text-center">
+                    <div class="bg-CybertronixBlue text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">3</div>
+                    <h4 class="font-bold">Bucle de Juego</h4>
+                    <p class="text-sm text-accentGray">Probar una sala completa con audio y feedback.</p>
+                </div>
+                <div class="bg-CybertronixGreen text-darkText p-6 rounded-lg shadow text-center">
+                    <div class="bg-cardBg text-CybertronixGreen w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">✓</div>
+                    <h4 class="font-bold">Validación Clínica</h4>
+                    <p class="text-sm opacity-80">Pruebas supervisadas por fisioterapeutas reales.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-10 mt-16 border-t border-gray-200">
+        <p class="text-accentGray">&copy; 2025 Cybertronix. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const therapyData = {
+                labels: [
+                    ['Mov. Brazo/', 'Hombro'], 
+                    'Rotación Torso', 
+                    ['Mov. Cuello/', 'Cabeza'], 
+                    ['Mov. Finos', '(Mano)'], 
+                    'Cardio/Ritmo', 
+                    ['Relajación/', 'Enfoque']
+                ],
+                datasets: {
+                    gimnasia: {
+                        label: 'Gimnasia (Escalar)',
+                        description: 'Ejercicio de extensión de brazos (dorsal, hombros), rotación de torso y coordinación mano-ojo.',
+                        data: [3, 2, 0, 1, 1, 0],
+                    },
+                    rumba: {
+                        label: 'Rumba Terapia',
+                        description: 'Movilidad de brazos, rotación de torso, movilidad de cuello/cabeza y ejercicio cardiovascular ligero.',
+                        data: [2, 2, 2, 0, 3, 0],
+                    },
+                    bolos: {
+                        label: 'Bolos',
+                        description: 'Movimiento controlado de hombro y brazo, coordinación y equilibrio.',
+                        data: [3, 1, 0, 1, 0, 0],
+                    },
+                    espadas: {
+                        label: 'Sala de Espadas',
+                        description: 'Rango de movimiento del brazo, velocidad de reacción, rotación del torso y seguimiento visual.',
+                        data: [3, 2, 1, 0, 2, 0],
+                    },
+                    basket: {
+                        label: 'Basket',
+                        description: 'Ejercicio de extensión de brazo, coordinación mano-ojo y cálculo de trayectoria.',
+                        data: [3, 0, 0, 1, 1, 0],
+                    },
+                    disparo: {
+                        label: 'Campo de Disparo',
+                        description: 'Precisión de mano, rotación de muñeca, seguimiento visual y movilidad de cabeza/cuello.',
+                        data: [1, 0, 2, 3, 0, 1],
+                    },
+                    boxeo: {
+                        label: 'Boxeo (Nuevo)',
+                        description: 'Ejercicio cardiovascular de alto impacto con movimientos controlados de brazo, hombro y rotación de torso.',
+                        data: [3, 3, 1, 0, 3, 0],
+                    },
+                    meditacion: {
+                        label: 'Meditación (Relajación)',
+                        description: 'Reducción del estrés, manejo del dolor y mejora de la concentración usando Terapia Auditiva (sonidos binaurales).',
+                        data: [0, 0, 0, 0, 0, 3],
+                    }
+                }
+            };
+
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                } else {
+                    return label;
+                }
+            };
+
+            let radarChart;
+            
+            function initRadarChart() {
+                const ctx = document.getElementById('therapyRadarChart').getContext('2d');
+                const initialData = therapyData.datasets.gimnasia;
+
+                radarChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: therapyData.labels,
+                        datasets: [{
+                            label: initialData.label,
+                            data: initialData.data,
+                            fill: true,
+                            backgroundColor: 'rgba(195, 213, 42, 0.2)',
+                            borderColor: '#C3D52A',
+                            pointBackgroundColor: '#C3D52A',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#C3D52A'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: tooltipTitleCallback
+                                }
+                            }
+                        },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 3,
+                                ticks: {
+                                    stepSize: 1,
+                                    display: false
+                                },
+                                pointLabels: {
+                                    font: {
+                                        size: 10
+                                    }
+                                },
+                                grid: {
+                                    color: '#e2e8f0'
+                                },
+                                angleLines: {
+                                    color: '#e2e8f0'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateRadarChart(therapyKey) {
+                const data = therapyData.datasets[therapyKey];
+                const titleEl = document.getElementById('therapy-title');
+                const descriptionEl = document.getElementById('therapy-description');
+
+                if (radarChart && data) {
+                    radarChart.data.datasets[0].data = data.data;
+                    radarChart.data.datasets[0].label = data.label;
+                    radarChart.update();
+
+                    titleEl.textContent = data.label;
+                    descriptionEl.textContent = data.description;
+                    
+                    titleEl.parentElement.classList.remove('animate-fade-in');
+                    void titleEl.parentElement.offsetWidth; 
+                    titleEl.parentElement.classList.add('animate-fade-in');
+                }
+            }
+            
+            function initPlatformChart() {
+                const ctx = document.getElementById('platformBarChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Meta Quest 2', 'Meta Quest 3'],
+                        datasets: [{
+                            label: 'Prioridad de Desarrollo',
+                            data: [95, 70], 
+                            backgroundColor: [
+                                '#10BAD4', 
+                                '#C3D52A' 
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: (tooltipItems) => tooltipItems[0].label 
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    callback: (value) => value + '%'
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            initRadarChart();
+            initPlatformChart();
+            updateRadarChart('gimnasia'); 
+
+            const buttons = document.querySelectorAll('.therapy-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateRadarChart(btn.dataset.therapy);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
