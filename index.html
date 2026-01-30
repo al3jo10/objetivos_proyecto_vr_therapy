@@ -8,18 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- 
-    Application Structure Plan: This SPA is a linear, top-to-bottom infographic. The narrative flow guides the user from the high-level concept (What is VR Therapy Center?) through the core design pillars (How is it safe and accessible?) and into the specific data-driven section: the therapeutic minigames. This data is visualized using an interactive radar chart to compare the therapeutic focus of each activity and a bar chart to show the target platforms. This linear, story-driven structure is chosen over a dashboard because an infographic's goal is presentation and quick digestion of a pre-defined story.
-    Visualization & Content Choices: 
-    1. GDD Concept -> Goal: Inform -> Viz: Large text header + logo. Method: HTML/Tailwind. Justification: Clear hook.
-    2. Design Pillars -> Goal: Compare -> Viz: 3-column card layout with Unicode icons (🥇, 🌌, ✋). Method: HTML/Tailwind (No SVG). Justification: Clearly segments the core philosophy.
-    3. Core Loop -> Goal: Organize (Process) -> Viz: HTML Flowchart (divs with '↓'). Method: HTML/Tailwind (No SVG/Mermaid). Justification: Simple, clear process flow.
-    4. Therapeutic Focus (8 Minigames) -> Goal: Compare -> Viz: Interactive Radar Chart. Method: Chart.js/Canvas. Justification: Best way to visualize multi-axial data. JS updates chart on button click. Labels are wrapped per 16-char requirement.
-    5. Platform Priority -> Goal: Inform/Compare -> Viz: Horizontal Bar Chart. Method: Chart.js/Canvas. Justification: Clearly shows the high priority of Quest 2.
-    6. Testing Strategy -> Goal: Organize (Process) -> Viz: 4-step timeline. Method: HTML/Tailwind cards (No SVG). Justification: Shows progression clearly.
-    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
-    Chosen Palette: Custom Cybertronix (Primary: #10BAD4, Secondary: #C3D52A)
-    -->
 
     <script>
         tailwind.config = {
@@ -75,147 +63,261 @@
                 height: 30rem;
             }
         }
+        
+        /* Botones de terapia con mejores interacciones */
         .therapy-btn {
-            transition: all 0.2s ease-in-out;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .therapy-btn:hover:not(.active) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(16, 186, 212, 0.2);
+            border-color: #10BAD4;
+        }
+        .therapy-btn:focus-visible {
+            outline: 3px solid #10BAD4;
+            outline-offset: 2px;
         }
         .therapy-btn.active {
             background-color: #10BAD4 !important;
             color: white !important;
             transform: scale(1.05);
-            box-shadow: 0 4px 14px 0 rgba(16, 186, 212, 0.3);
+            box-shadow: 0 6px 20px 0 rgba(16, 186, 212, 0.4);
+        }
+        .therapy-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(16, 186, 212, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .therapy-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* Animaciones de entrada */
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Efecto parallax sutil */
+        .parallax-bg {
+            transition: transform 0.5s ease-out;
+        }
+        
+        /* Cards con hover mejorado */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        }
+        
+        /* Focus states mejorados */
+        .focus-ring:focus-visible {
+            outline: 3px solid #10BAD4;
+            outline-offset: 3px;
+            border-radius: 8px;
+        }
+        
+        /* Glow effect para elementos destacados */
+        .glow-on-hover {
+            transition: all 0.3s ease;
+        }
+        .glow-on-hover:hover {
+            box-shadow: 0 0 20px rgba(16, 186, 212, 0.4);
+        }
+        
+        /* Animación de contadores */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .count-animation {
+            animation: countUp 0.8s ease-out;
+        }
+        
+        /* Grid responsive mejorado */
+        @media (max-width: 640px) {
+            .therapy-btn {
+                font-size: 0.9rem;
+                padding: 0.5rem 0.75rem;
+            }
+        }
+        
+        /* Scroll reveal */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body class="bg-lightBg text-darkText font-sans antialiased">
 
     <!-- Header & Hook -->
-    <header class="bg-cardBg py-10 md:py-16">
-        <div class="max-w-5xl mx-auto px-6 text-center">
-            <img src="image_43fcab.png" alt="Logo de Cybertronix" class="h-20 w-auto mx-auto mb-6" onerror="this.src='https://placehold.co/200x80/10BAD4/white?text=Cybertronix'">
-            <h1 class="text-4xl md:text-6xl font-black text-CybertronixBlue mb-4">
+    <header class="bg-gradient-to-b from-cardBg to-lightBg py-12 md:py-20 relative overflow-hidden">
+        <div class="parallax-bg max-w-5xl mx-auto px-6 text-center relative z-10">
+            <img src="image_43fcab.png" alt="Logo de Cybertronix" class="h-20 w-auto mx-auto mb-6 fade-in-up glow-on-hover" style="animation-delay: 0.1s" onerror="this.src='https://placehold.co/200x80/10BAD4/white?text=Cybertronix'">
+            <h1 class="text-5xl md:text-7xl font-black text-CybertronixBlue mb-6 fade-in-up" style="animation-delay: 0.2s">
                 VR Therapy Center
             </h1>
-            <p class="text-xl md:text-2xl text-darkText font-light max-w-3xl mx-auto">
-                Una nueva era en la rehabilitación física. Hacemos que la terapia sea <span class="font-semibold text-CybertronixGreen">divertida, accesible y eficiente</span> para todas las edades.
+            <p class="text-xl md:text-2xl text-darkText font-light max-w-3xl mx-auto leading-relaxed fade-in-up" style="animation-delay: 0.3s">
+                Una nueva era en la rehabilitación física. Hacemos que la terapia sea <span class="font-semibold text-CybertronixGreen bg-CybertronixGreen bg-opacity-10 px-2 py-1 rounded">divertida, accesible y eficiente</span> para todas las edades.
             </p>
+            <div class="mt-8 flex justify-center gap-4 fade-in-up" style="animation-delay: 0.4s">
+                <a href="#therapy" class="bg-CybertronixBlue text-white px-8 py-3 rounded-full font-semibold hover:bg-opacity-90 transition-all hover:scale-105 shadow-lg focus-ring">
+                    Explorar Terapias
+                </a>
+            </div>
         </div>
+        <!-- Decorative elements -->
+        <div class="absolute top-10 left-10 w-32 h-32 bg-CybertronixBlue opacity-5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 right-10 w-40 h-40 bg-CybertronixGreen opacity-5 rounded-full blur-3xl"></div>
     </header>
 
     <main class="max-w-5xl mx-auto p-6 space-y-16 md:space-y-24 mt-12">
 
         <!-- Sección 1: Pilares del Diseño -->
-        <section>
+        <section class="scroll-reveal">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Diseñado para el Paciente</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Pilar 1: Comodidad -->
-                <div class="bg-cardBg p-6 rounded-lg shadow-lg border-l-4 border-CybertronixBlue">
-                    <div class="text-5xl mb-3">🥇</div>
-                    <h3 class="text-2xl font-bold mb-2">Comodidad Primero</h3>
-                    <p class="text-accentGray">La prioridad #1 es <span class="font-semibold text-darkText">cero mareo</span>. El diseño por defecto es sentado, con teletransporte y giro "snap-turn" para una accesibilidad total.</p>
+                <div class="bg-cardBg p-6 rounded-xl shadow-lg border-l-4 border-CybertronixBlue card-hover focus-ring" tabindex="0" role="article" aria-label="Pilar de diseño: Comodidad Primero">
+                    <div class="text-5xl mb-3 transition-transform duration-300 hover:scale-110">🥇</div>
+                    <h3 class="text-2xl font-bold mb-3 text-CybertronixBlue">Comodidad Primero</h3>
+                    <p class="text-accentGray leading-relaxed">La prioridad #1 es <span class="font-semibold text-darkText bg-blue-50 px-1 rounded">cero mareo</span>. El diseño por defecto es sentado, con teletransporte y giro "snap-turn" para una accesibilidad total.</p>
                 </div>
                 <!-- Pilar 2: Accesibilidad -->
-                <div class="bg-cardBg p-6 rounded-lg shadow-lg border-l-4 border-CybertronixGreen">
-                    <div class="text-5xl mb-3">✋</div>
-                    <h3 class="text-2xl font-bold mb-2">Interacción Accesible</h3>
-                    <p class="text-accentGray">UI simple con iconos grandes. El agarre <span class="font-semibold text-darkText">"toggle"</span> (presionar una vez) evita la fatiga en manos con debilidad.</p>
+                <div class="bg-cardBg p-6 rounded-xl shadow-lg border-l-4 border-CybertronixGreen card-hover focus-ring" tabindex="0" role="article" aria-label="Pilar de diseño: Interacción Accesible">
+                    <div class="text-5xl mb-3 transition-transform duration-300 hover:scale-110">✋</div>
+                    <h3 class="text-2xl font-bold mb-3 text-CybertronixGreen">Interacción Accesible</h3>
+                    <p class="text-accentGray leading-relaxed">UI simple con iconos grandes. El agarre <span class="font-semibold text-darkText bg-green-50 px-1 rounded">"toggle"</span> (presionar una vez) evita la fatiga en manos con debilidad.</p>
                 </div>
                 <!-- Pilar 3: Inmersión -->
-                <div class="bg-cardBg p-6 rounded-lg shadow-lg border-l-4 border-CybertronixBlue">
-                    <div class="text-5xl mb-3">🌌</div>
-                    <h3 class="text-2xl font-bold mb-2">Entorno Amigable</h3>
-                    <p class="text-accentGray">Entornos brillantes, coloridos y relajantes. Evitamos diseños <span class="font-semibold text-darkText">"clínicos" u "hospitalarios"</span> para reducir la ansiedad.</p>
+                <div class="bg-cardBg p-6 rounded-xl shadow-lg border-l-4 border-CybertronixBlue card-hover focus-ring" tabindex="0" role="article" aria-label="Pilar de diseño: Entorno Amigable">
+                    <div class="text-5xl mb-3 transition-transform duration-300 hover:scale-110">🌌</div>
+                    <h3 class="text-2xl font-bold mb-3 text-CybertronixBlue">Entorno Amigable</h3>
+                    <p class="text-accentGray leading-relaxed">Entornos brillantes, coloridos y relajantes. Evitamos diseños <span class="font-semibold text-darkText bg-blue-50 px-1 rounded">"clínicos" u "hospitalarios"</span> para reducir la ansiedad.</p>
                 </div>
             </div>
         </section>
 
         <!-- Sección 2: Flujo de Experiencia -->
-        <section>
+        <section class="scroll-reveal">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">La Experiencia del Paciente</h2>
-            <div class="flex flex-col items-center space-y-4">
-                <div class="bg-cardBg p-6 rounded-lg shadow-lg w-full md:w-3/4 text-center">
-                    <span class="text-xs font-semibold text-CybertronixBlue uppercase">Paso 1</span>
-                    <h3 class="text-2xl font-bold">Tutorial de Bienvenida</h3>
-                    <p class="text-accentGray">Una voz guía enseña a moverse y agarrar en un entorno seguro.</p>
+            <div class="flex flex-col items-center space-y-6">
+                <div class="bg-cardBg p-8 rounded-xl shadow-lg w-full md:w-3/4 text-center card-hover border-2 border-transparent hover:border-CybertronixBlue transition-all focus-ring" tabindex="0">
+                    <span class="inline-block text-xs font-semibold text-white bg-CybertronixBlue px-3 py-1 rounded-full uppercase mb-3">Paso 1</span>
+                    <h3 class="text-2xl font-bold mb-2">Tutorial de Bienvenida</h3>
+                    <p class="text-accentGray leading-relaxed">Una voz guía enseña a moverse y agarrar en un entorno seguro.</p>
                 </div>
-                <div class="text-5xl font-thin text-accentGray">↓</div>
-                <div class="bg-CybertronixBlue text-white p-8 rounded-lg shadow-xl w-full md:w-3/4 text-center">
-                    <span class="text-xs font-semibold text-lightBg uppercase">Paso 2</span>
-                    <h3 class="text-2xl font-bold">Sala Inicio (Hub Central)</h3>
-                    <p class="opacity-90">Un espacio relajante para elegir la actividad de terapia del día.</p>
+                <div class="text-4xl font-thin text-accentGray animate-bounce">↓</div>
+                <div class="bg-gradient-to-br from-CybertronixBlue to-blue-500 text-white p-10 rounded-xl shadow-2xl w-full md:w-3/4 text-center card-hover focus-ring" tabindex="0">
+                    <span class="inline-block text-xs font-semibold bg-white bg-opacity-20 px-3 py-1 rounded-full uppercase mb-3">Paso 2 • Principal</span>
+                    <h3 class="text-2xl font-bold mb-2">Sala Inicio (Hub Central)</h3>
+                    <p class="opacity-90 leading-relaxed">Un espacio relajante para elegir la actividad de terapia del día.</p>
                 </div>
-                <div class="text-5xl font-thin text-accentGray">↓</div>
-                <div class="bg-cardBg p-6 rounded-lg shadow-lg w-full md:w-3/4 text-center">
-                    <span class="text-xs font-semibold text-CybertronixGreen uppercase">Paso 3</span>
-                    <h3 class="text-2xl font-bold">Salas de Actividades</h3>
-                    <p class="text-accentGray">Minijuegos terapéuticos diseñados para objetivos específicos.</p>
+                <div class="text-4xl font-thin text-accentGray animate-bounce" style="animation-delay: 0.2s">↓</div>
+                <div class="bg-cardBg p-8 rounded-xl shadow-lg w-full md:w-3/4 text-center card-hover border-2 border-transparent hover:border-CybertronixGreen transition-all focus-ring" tabindex="0">
+                    <span class="inline-block text-xs font-semibold text-white bg-CybertronixGreen px-3 py-1 rounded-full uppercase mb-3">Paso 3</span>
+                    <h3 class="text-2xl font-bold mb-2">Salas de Actividades</h3>
+                    <p class="text-accentGray leading-relaxed">Minijuegos terapéuticos diseñados para objetivos específicos.</p>
                 </div>
             </div>
         </section>
 
         <!-- Sección 3: El Corazón de la Terapia (Datos) -->
-        <section>
+        <section id="therapy" class="scroll-reveal">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">El Corazón de la Terapia</h2>
-            <p class="text-lg text-accentGray text-center mb-10 max-w-2xl mx-auto">
-                Cada actividad es un "Exergame" diseñado para un objetivo terapéutico. Selecciona una actividad para ver su perfil de enfoque.
+            <p class="text-lg text-accentGray text-center mb-10 max-w-2xl mx-auto leading-relaxed">
+                Cada actividad es un "Exergame" diseñado para un objetivo terapéutico. <strong class="text-darkText">Selecciona una actividad</strong> para ver su perfil de enfoque.
             </p>
             
             <!-- Botones de Selección -->
-            <div id="therapy-buttons" class="flex flex-wrap justify-center gap-3 mb-8">
-                <button data-therapy="gimnasia" class="therapy-btn active bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🏋️ Gimnasia</button>
-                <button data-therapy="rumba" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">💃 Rumba</button>
-                <button data-therapy="bolos" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🎳 Bolos</button>
-                <button data-therapy="espadas" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">⚔️ Espadas</button>
-                <button data-therapy="basket" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🏀 Basket</button>
-                <button data-therapy="disparo" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🎯 Disparo</button>
-                <button data-therapy="boxeo" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🥊 Boxeo</button>
-                <button data-therapy="meditacion" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-2 px-4 rounded-full">🧘 Meditación</button>
+            <div id="therapy-buttons" class="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-3 mb-10" role="tablist" aria-label="Seleccionar actividad terapéutica">
+                <button data-therapy="gimnasia" class="therapy-btn active bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="true" aria-controls="therapy-chart">🏋️ Gimnasia</button>
+                <button data-therapy="rumba" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">💃 Rumba</button>
+                <button data-therapy="bolos" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">🎳 Bolos</button>
+                <button data-therapy="espadas" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">⚔️ Espadas</button>
+                <button data-therapy="basket" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">🏀 Basket</button>
+                <button data-therapy="disparo" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">🎯 Disparo</button>
+                <button data-therapy="boxeo" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">🥊 Boxeo</button>
+                <button data-therapy="meditacion" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">🧘 Meditación</button>
             </div>
 
             <!-- Gráfico y Contexto -->
-            <div class="bg-cardBg p-6 rounded-lg shadow-xl">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
-                    <div class="chart-container-radar">
-                        <canvas id="therapyRadarChart"></canvas>
+            <div class="bg-cardBg p-8 rounded-2xl shadow-2xl border border-gray-100" id="therapy-chart" role="tabpanel">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div class="chart-container-radar order-2 lg:order-1">
+                        <canvas id="therapyRadarChart" aria-label="Gráfico de enfoque terapéutico"></canvas>
                     </div>
-                    <div id="therapy-context" class="animate-fade-in">
-                        <h3 id="therapy-title" class="text-3xl font-bold text-CybertronixBlue mb-3"></h3>
-                        <p id="therapy-description" class="text-lg text-accentGray"></p>
+                    <div id="therapy-context" class="animate-fade-in order-1 lg:order-2">
+                        <div class="inline-block bg-CybertronixBlue bg-opacity-10 text-CybertronixBlue px-4 py-2 rounded-full text-sm font-semibold mb-4">Perfil Terapéutico</div>
+                        <h3 id="therapy-title" class="text-3xl md:text-4xl font-bold text-CybertronixBlue mb-4"></h3>
+                        <p id="therapy-description" class="text-lg text-accentGray leading-relaxed"></p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Sección 4: Plataforma y Rendimiento -->
-        <section>
+        <section class="scroll-reveal">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Rendimiento y Plataforma</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div class="bg-cardBg p-8 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-bold mb-4">Plataformas Objetivo</h3>
-                    <p class="text-accentGray mb-6">El desarrollo se centra en la plataforma <span class="font-semibold text-darkText">Meta Quest 2</span> debido a su gran base instalada, asegurando compatibilidad con Quest 3.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div class="bg-cardBg p-8 rounded-xl shadow-lg card-hover">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-4xl">🎮</span>
+                        <h3 class="text-2xl font-bold">Plataformas Objetivo</h3>
+                    </div>
+                    <p class="text-accentGray mb-6 leading-relaxed">El desarrollo se centra en la plataforma <span class="font-semibold text-darkText bg-blue-50 px-2 py-1 rounded">Meta Quest 2</span> debido a su gran base instalada, asegurando compatibilidad con Quest 3.</p>
                     <div class="chart-container">
-                        <canvas id="platformBarChart"></canvas>
+                        <canvas id="platformBarChart" aria-label="Gráfico de prioridad de plataformas"></canvas>
                     </div>
                 </div>
                  <div class="space-y-4">
-                    <div class="bg-cardBg p-6 rounded-lg shadow-lg flex items-center">
-                        <span class="text-4xl mr-4">📈</span>
+                    <div class="bg-gradient-to-br from-CybertronixBlue to-blue-500 text-white p-6 rounded-xl shadow-lg card-hover flex items-center gap-4">
+                        <span class="text-5xl">📈</span>
                         <div>
-                            <h4 class="text-xl font-bold">FPS Objetivo: 72-90</h4>
-                            <p class="text-accentGray">Un framerate estable es vital para prevenir el mareo.</p>
+                            <h4 class="text-xl font-bold mb-1">FPS Objetivo: <span class="count-animation text-3xl">72-90</span></h4>
+                            <p class="opacity-90 text-sm">Un framerate estable es vital para prevenir el mareo.</p>
                         </div>
                     </div>
-                    <div class="bg-cardBg p-6 rounded-lg shadow-lg flex items-center">
-                        <span class="text-4xl mr-4">💡</span>
+                    <div class="bg-cardBg p-6 rounded-xl shadow-lg card-hover flex items-center gap-4 border-l-4 border-CybertronixGreen">
+                        <span class="text-5xl transition-transform duration-300 hover:scale-110">💡</span>
                         <div>
-                            <h4 class="text-xl font-bold">Iluminación Optimizada</h4>
-                            <p class="text-accentGray">Uso de "Baked Lighting" para máximo rendimiento en móvil.</p>
+                            <h4 class="text-xl font-bold mb-1">Iluminación Optimizada</h4>
+                            <p class="text-accentGray text-sm">Uso de "Baked Lighting" para máximo rendimiento en móvil.</p>
                         </div>
                     </div>
-                    <div class="bg-cardBg p-6 rounded-lg shadow-lg flex items-center">
-                        <span class="text-4xl mr-4">👁️</span>
+                    <div class="bg-cardBg p-6 rounded-xl shadow-lg card-hover flex items-center gap-4 border-l-4 border-CybertronixBlue">
+                        <span class="text-5xl transition-transform duration-300 hover:scale-110">👁️</span>
                         <div>
-                            <h4 class="text-xl font-bold">Renderizado SPIR</h4>
-                            <p class="text-accentGray">Single-Pass Instanced Rendering para renderizar ambos ojos a la vez.</p>
+                            <h4 class="text-xl font-bold mb-1">Renderizado SPIR</h4>
+                            <p class="text-accentGray text-sm">Single-Pass Instanced Rendering para renderizar ambos ojos a la vez.</p>
                         </div>
                     </div>
                 </div>
@@ -223,36 +325,40 @@
         </section>
 
         <!-- Sección 5: Estrategia de Validación -->
-        <section>
+        <section class="scroll-reveal">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Estrategia de Validación</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-cardBg p-6 rounded-lg shadow text-center">
-                    <div class="bg-CybertronixBlue text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">1</div>
-                    <h4 class="font-bold">Prototipo de Confort</h4>
-                    <p class="text-sm text-accentGray">Probar solo locomoción. Métrica: Cero mareos.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-cardBg p-6 rounded-xl shadow-lg text-center card-hover focus-ring" tabindex="0" role="article">
+                    <div class="bg-CybertronixBlue text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">1</div>
+                    <h4 class="font-bold text-lg mb-2">Prototipo de Confort</h4>
+                    <p class="text-sm text-accentGray leading-relaxed">Probar solo locomoción. Métrica: Cero mareos.</p>
                 </div>
-                <div class="bg-cardBg p-6 rounded-lg shadow text-center">
-                    <div class="bg-CybertronixBlue text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">2</div>
-                    <h4 class="font-bold">Prototipo de Interacción</h4>
-                    <p class="text-sm text-accentGray">Probar agarre "toggle" y UI. Métrica: Cero fatiga.</p>
+                <div class="bg-cardBg p-6 rounded-xl shadow-lg text-center card-hover focus-ring" tabindex="0" role="article">
+                    <div class="bg-CybertronixBlue text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">2</div>
+                    <h4 class="font-bold text-lg mb-2">Prototipo de Interacción</h4>
+                    <p class="text-sm text-accentGray leading-relaxed">Probar agarre "toggle" y UI. Métrica: Cero fatiga.</p>
                 </div>
-                <div class="bg-cardBg p-6 rounded-lg shadow text-center">
-                    <div class="bg-CybertronixBlue text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">3</div>
-                    <h4 class="font-bold">Bucle de Juego</h4>
-                    <p class="text-sm text-accentGray">Probar una sala completa con audio y feedback.</p>
+                <div class="bg-cardBg p-6 rounded-xl shadow-lg text-center card-hover focus-ring" tabindex="0" role="article">
+                    <div class="bg-CybertronixBlue text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">3</div>
+                    <h4 class="font-bold text-lg mb-2">Bucle de Juego</h4>
+                    <p class="text-sm text-accentGray leading-relaxed">Probar una sala completa con audio y feedback.</p>
                 </div>
-                <div class="bg-CybertronixGreen text-darkText p-6 rounded-lg shadow text-center">
-                    <div class="bg-cardBg text-CybertronixGreen w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">✓</div>
-                    <h4 class="font-bold">Validación Clínica</h4>
-                    <p class="text-sm opacity-80">Pruebas supervisadas por fisioterapeutas reales.</p>
+                <div class="bg-gradient-to-br from-CybertronixGreen to-green-400 text-white p-6 rounded-xl shadow-xl text-center card-hover focus-ring" tabindex="0" role="article">
+                    <div class="bg-white text-CybertronixGreen w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">✓</div>
+                    <h4 class="font-bold text-lg mb-2">Validación Clínica</h4>
+                    <p class="text-sm opacity-95 leading-relaxed">Pruebas supervisadas por fisioterapeutas reales.</p>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="text-center p-10 mt-16 border-t border-gray-200">
-        <p class="text-accentGray">&copy; 2025 Cybertronix. Todos los derechos reservados.</p>
+    <footer class="text-center p-12 mt-24 bg-gradient-to-t from-gray-50 to-transparent border-t border-gray-200">
+        <div class="max-w-5xl mx-auto">
+            <img src="image_43fcab.png" alt="Logo de Cybertronix" class="h-12 w-auto mx-auto mb-4 opacity-60" onerror="this.src='https://placehold.co/200x80/10BAD4/white?text=Cybertronix'">
+            <p class="text-accentGray mb-2">&copy; 2025 Cybertronix. Todos los derechos reservados.</p>
+            <p class="text-sm text-accentGray">Transformando la rehabilitación física con realidad virtual</p>
+        </div>
     </footer>
 
     <script>
@@ -458,9 +564,57 @@
             const buttons = document.querySelectorAll('.therapy-btn');
             buttons.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    buttons.forEach(b => b.classList.remove('active'));
+                    buttons.forEach(b => {
+                        b.classList.remove('active');
+                        b.setAttribute('aria-selected', 'false');
+                    });
                     btn.classList.add('active');
+                    btn.setAttribute('aria-selected', 'true');
                     updateRadarChart(btn.dataset.therapy);
+                });
+                
+                // Keyboard navigation
+                btn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        btn.click();
+                    }
+                });
+            });
+            
+            // Scroll reveal animations
+            const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+            const scrollRevealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            scrollRevealElements.forEach(el => scrollRevealObserver.observe(el));
+            
+            // Parallax effect for header
+            const parallaxBg = document.querySelector('.parallax-bg');
+            if (parallaxBg) {
+                window.addEventListener('scroll', () => {
+                    const scrolled = window.pageYOffset;
+                    const rate = scrolled * 0.3;
+                    parallaxBg.style.transform = `translateY(${rate}px)`;
+                });
+            }
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
                 });
             });
         });
