@@ -1,623 +1,564 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografía: VR Therapy Center</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Resumen general de tipologías</title>
+	<style>
+		:root {
+			--bg: #eef3f8;
+			--panel: rgba(255, 255, 255, 0.94);
+			--line: #d6dee8;
+			--text: #122033;
+			--muted: #5f6d7d;
+			--blue: #184f79;
+			--blue-2: #0f6b8a;
+			--shadow: 0 18px 48px rgba(18, 32, 51, 0.12);
+			--radius: 22px;
+		}
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        CybertronixBlue: '#10BAD4',
-                        CybertronixGreen: '#C3D52A',
-                        darkText: '#1C2B3A',
-                        lightBg: '#F0F9FF', 
-                        cardBg: '#FFFFFF',
-                        accentGray: '#94A3B8',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: 0, transform: 'translateY(10px)' },
-                            '100%': { opacity: 1, transform: 'translateY(0)' },
-                        },
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .chart-container {
-            position: relative;
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            height: 24rem; 
-            max-height: 400px; 
-        }
-        .chart-container-radar {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 24rem; 
-            max-height: 500px; 
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 20rem;
-            }
-            .chart-container-radar {
-                height: 30rem;
-            }
-        }
-        
-        /* Botones de terapia con mejores interacciones */
-        .therapy-btn {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .therapy-btn:hover:not(.active) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px 0 rgba(16, 186, 212, 0.2);
-            border-color: #10BAD4;
-        }
-        .therapy-btn:focus-visible {
-            outline: 3px solid #10BAD4;
-            outline-offset: 2px;
-        }
-        .therapy-btn.active {
-            background-color: #10BAD4 !important;
-            color: white !important;
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px 0 rgba(16, 186, 212, 0.4);
-        }
-        .therapy-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(16, 186, 212, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        .therapy-btn:active::before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        /* Animaciones de entrada */
-        .fade-in-up {
-            animation: fadeInUp 0.8s ease-out forwards;
-            opacity: 0;
-        }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Efecto parallax sutil */
-        .parallax-bg {
-            transition: transform 0.5s ease-out;
-        }
-        
-        /* Cards con hover mejorado */
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-        }
-        
-        /* Focus states mejorados */
-        .focus-ring:focus-visible {
-            outline: 3px solid #10BAD4;
-            outline-offset: 3px;
-            border-radius: 8px;
-        }
-        
-        /* Glow effect para elementos destacados */
-        .glow-on-hover {
-            transition: all 0.3s ease;
-        }
-        .glow-on-hover:hover {
-            box-shadow: 0 0 20px rgba(16, 186, 212, 0.4);
-        }
-        
-        /* Animación de contadores */
-        @keyframes countUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .count-animation {
-            animation: countUp 0.8s ease-out;
-        }
-        
-        /* Grid responsive mejorado */
-        @media (max-width: 640px) {
-            .therapy-btn {
-                font-size: 0.9rem;
-                padding: 0.5rem 0.75rem;
-            }
-        }
-        
-        /* Scroll reveal */
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        .scroll-reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			font-family: "Segoe UI", Arial, sans-serif;
+			color: var(--text);
+			background:
+				radial-gradient(circle at top left, rgba(24, 79, 121, 0.14), transparent 26%),
+				radial-gradient(circle at top right, rgba(15, 107, 138, 0.10), transparent 28%),
+				linear-gradient(180deg, #eaf1f8 0%, #f6f8fb 46%, #eef3f8 100%);
+			min-height: 100vh;
+			padding: 30px;
+		}
+
+		.wrap {
+			max-width: 1520px;
+			margin: 0 auto;
+		}
+
+		.hero {
+			background: linear-gradient(135deg, rgba(24, 79, 121, 0.98), rgba(15, 107, 138, 0.95));
+			color: #fff;
+			border-radius: 30px;
+			padding: 34px 36px;
+			box-shadow: var(--shadow);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.hero::after {
+			content: "";
+			position: absolute;
+			inset: auto -140px -180px auto;
+			width: 360px;
+			height: 360px;
+			border-radius: 50%;
+			background: rgba(255, 255, 255, 0.08);
+		}
+
+		.eyebrow {
+			text-transform: uppercase;
+			letter-spacing: 0.18em;
+			font-size: 12px;
+			font-weight: 700;
+			opacity: 0.85;
+			margin-bottom: 10px;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: clamp(2rem, 3vw, 3.35rem);
+			line-height: 1.05;
+			max-width: 980px;
+		}
+
+		.hero p {
+			max-width: 920px;
+			margin: 16px 0 0;
+			font-size: 1.02rem;
+			line-height: 1.65;
+			color: rgba(255, 255, 255, 0.88);
+		}
+
+		.meta {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-top: 18px;
+		}
+
+		.pill {
+			padding: 10px 14px;
+			border-radius: 999px;
+			border: 1px solid rgba(255, 255, 255, 0.16);
+			background: rgba(255, 255, 255, 0.12);
+			backdrop-filter: blur(8px);
+			font-size: 0.92rem;
+		}
+
+		.stats {
+			display: grid;
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+			gap: 16px;
+			margin-top: 22px;
+		}
+
+		.stat {
+			grid-column: span 3;
+			background: var(--panel);
+			border: 1px solid rgba(214, 222, 232, 0.9);
+			border-radius: var(--radius);
+			box-shadow: var(--shadow);
+			padding: 20px;
+		}
+
+		.stat .label {
+			color: var(--muted);
+			font-size: 0.92rem;
+			margin-bottom: 10px;
+		}
+
+		.stat .value {
+			font-size: clamp(1.7rem, 2vw, 2.25rem);
+			font-weight: 800;
+			line-height: 1;
+			margin-bottom: 8px;
+		}
+
+		.stat .detail {
+			color: var(--muted);
+			line-height: 1.5;
+			font-size: 0.95rem;
+		}
+
+		.section {
+			margin-top: 22px;
+			background: var(--panel);
+			border: 1px solid rgba(214, 222, 232, 0.9);
+			border-radius: 28px;
+			box-shadow: var(--shadow);
+			overflow: hidden;
+		}
+
+		.section-header {
+			padding: 24px 28px 18px;
+			border-bottom: 1px solid var(--line);
+			display: flex;
+			justify-content: space-between;
+			align-items: end;
+			flex-wrap: wrap;
+			gap: 14px;
+		}
+
+		.section-header h2 {
+			margin: 0;
+			font-size: 1.42rem;
+		}
+
+		.section-header .subtitle {
+			color: var(--muted);
+			margin-top: 7px;
+			line-height: 1.55;
+			max-width: 900px;
+			font-size: 0.96rem;
+		}
+
+		.badge {
+			display: inline-flex;
+			align-items: center;
+			padding: 8px 12px;
+			border-radius: 999px;
+			color: #0d5f6b;
+			background: rgba(15, 107, 138, 0.12);
+			font-weight: 700;
+			font-size: 0.88rem;
+			white-space: nowrap;
+		}
+
+		.table-wrap {
+			overflow-x: auto;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			min-width: 1180px;
+		}
+
+		thead th {
+			background: linear-gradient(180deg, #f8fbff, #edf3f8);
+			color: #243346;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			font-size: 0.81rem;
+			text-align: left;
+			padding: 16px 18px;
+			border-bottom: 1px solid var(--line);
+		}
+
+		tbody td {
+			padding: 15px 18px;
+			border-bottom: 1px solid var(--line);
+			vertical-align: top;
+			font-size: 0.95rem;
+		}
+
+		tbody tr:nth-child(even) { background: rgba(243, 247, 251, 0.65); }
+		tbody tr:hover { background: rgba(24, 79, 121, 0.05); }
+
+		.typology-cell {
+			font-weight: 700;
+			color: #102338;
+			line-height: 1.32;
+		}
+
+		.total-row {
+			background: linear-gradient(180deg, rgba(222, 231, 242, 0.95), rgba(230, 237, 247, 0.95));
+			font-weight: 700;
+		}
+
+		.total-row td {
+			border-bottom-color: #cbd7e4;
+		}
+
+		.subtle {
+			color: var(--muted);
+		}
+
+		.navlink {
+			display: inline-flex;
+			align-items: center;
+			padding: 7px 11px;
+			border-radius: 999px;
+			text-decoration: none;
+			color: #0e5d72;
+			background: rgba(15, 107, 138, 0.10);
+			font-weight: 700;
+			white-space: nowrap;
+		}
+
+		.details-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 16px;
+			padding: 18px 18px 26px;
+		}
+
+		.detail-card {
+			background: linear-gradient(180deg, rgba(248, 250, 252, 0.92), rgba(240, 246, 251, 0.92));
+			border: 1px solid rgba(214, 222, 232, 0.9);
+			border-radius: 22px;
+			padding: 18px;
+		}
+
+		.detail-card h3 {
+			margin: 0;
+			font-size: 1.06rem;
+			line-height: 1.35;
+		}
+
+		.detail-meta {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			margin-top: 10px;
+			color: var(--muted);
+			font-size: 0.92rem;
+		}
+
+		.detail-mini {
+			margin-top: 14px;
+			width: 100%;
+			min-width: 0;
+			border-collapse: collapse;
+			background: #fff;
+			border-radius: 14px;
+			overflow: hidden;
+		}
+
+		.detail-mini th, .detail-mini td {
+			padding: 10px 12px;
+			border-bottom: 1px solid #e3e9f0;
+			text-align: left;
+			font-size: 0.92rem;
+		}
+
+		.detail-mini th {
+			background: #f3f7fb;
+			color: #314255;
+		}
+
+		.note {
+			padding: 18px 28px 26px;
+			color: var(--muted);
+			line-height: 1.6;
+			font-size: 0.92rem;
+			background: linear-gradient(180deg, rgba(248, 250, 252, 0.72), rgba(239, 245, 250, 0.95));
+		}
+
+		@media (max-width: 1100px) {
+			.stat { grid-column: span 6; }
+			.details-grid { grid-template-columns: 1fr; }
+		}
+
+		@media (max-width: 700px) {
+			body { padding: 16px; }
+			.hero { padding: 24px 20px; border-radius: 24px; }
+			.section { border-radius: 22px; }
+			.section-header, .note { padding-left: 18px; padding-right: 18px; }
+			.stat { grid-column: span 12; }
+		}
+	</style>
 </head>
-<body class="bg-lightBg text-darkText font-sans antialiased">
+<body>
+	<div class="wrap">
+		<section class="hero">
+			<div class="eyebrow">Resumen general consolidado</div>
+			<h1>Tabla de resumen de GNC, FRH, PASC, DP, DP_EVENTOS_CIENTIFICOS y DTeI</h1>
+			<p>
+				Esta vista consolida las seis hojas de cálculo en una sola tabla ejecutiva con el histórico total y la ventana 2020-2025.
+				La estructura sigue tu referencia: tipología, subtipo o corte, totales y un acceso rápido a cada bloque.
+			</p>
+			<div class="meta">
+				<div class="pill">6 tipologías analizadas</div>
+				<div class="pill">7.331 registros históricos</div>
+				<div class="pill">3.756 registros en 2020-2025</div>
+				<div class="pill">44 filas consolidadas</div>
+			</div>
+		</section>
 
-    <!-- Header & Hook -->
-    <header class="bg-gradient-to-b from-cardBg to-lightBg py-12 md:py-20 relative overflow-hidden">
-        <div class="parallax-bg max-w-5xl mx-auto px-6 text-center relative z-10">
-            <img src="image_43fcab.png" alt="Logo de Cybertronix" class="h-20 w-auto mx-auto mb-6 fade-in-up glow-on-hover" style="animation-delay: 0.1s" onerror="this.src='https://placehold.co/200x80/10BAD4/white?text=Cybertronix'">
-            <h1 class="text-5xl md:text-7xl font-black text-CybertronixBlue mb-6 fade-in-up" style="animation-delay: 0.2s">
-                VR Therapy Center
-            </h1>
-            <p class="text-xl md:text-2xl text-darkText font-light max-w-3xl mx-auto leading-relaxed fade-in-up" style="animation-delay: 0.3s">
-                Una nueva era en la rehabilitación física. Hacemos que la terapia sea <span class="font-semibold text-CybertronixGreen bg-CybertronixGreen bg-opacity-10 px-2 py-1 rounded">divertida, accesible y eficiente</span> para todas las edades.
-            </p>
-            <div class="mt-8 flex justify-center gap-4 fade-in-up" style="animation-delay: 0.4s">
-                <a href="#therapy" class="bg-CybertronixBlue text-white px-8 py-3 rounded-full font-semibold hover:bg-opacity-90 transition-all hover:scale-105 shadow-lg focus-ring">
-                    Explorar Terapias
-                </a>
-            </div>
-        </div>
-        <!-- Decorative elements -->
-        <div class="absolute top-10 left-10 w-32 h-32 bg-CybertronixBlue opacity-5 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-10 right-10 w-40 h-40 bg-CybertronixGreen opacity-5 rounded-full blur-3xl"></div>
-    </header>
+		<section class="stats" id="stats"></section>
 
-    <main class="max-w-5xl mx-auto p-6 space-y-16 md:space-y-24 mt-12">
+		<section class="section">
+			<div class="section-header">
+				<div>
+					<h2>Tabla general de tipologías y subtipos</h2>
+					<div class="subtitle">
+						El total por tipología agrupa toda la hoja correspondiente. Las filas siguientes detallan el subtipo o corte más relevante dentro de cada hoja.
+					</div>
+				</div>
+				<div class="badge">Ordenada por tipología</div>
+			</div>
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th>Tipología</th>
+							<th>Subtipo o corte</th>
+							<th>Histórico</th>
+							<th>Ventana 2020-2025</th>
+							<th>Navegación</th>
+						</tr>
+					</thead>
+					<tbody id="summary-table"></tbody>
+				</table>
+			</div>
+			<div class="note">
+				Los tres bloques con mayor volumen histórico son <strong>Formación RH</strong>, <strong>Eventos Científicos</strong> y <strong>Divulgación Pública (DP)</strong>.
+				En la ventana 2020-2025, destacan <strong>Formación RH</strong>, <strong>Eventos Científicos</strong> y <strong>DTeI</strong> por su mayor concentración de registros.
+			</div>
+		</section>
 
-        <!-- Sección 1: Pilares del Diseño -->
-        <section class="scroll-reveal">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Diseñado para el Paciente</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Pilar 1: Comodidad -->
-                <div class="bg-cardBg p-6 rounded-xl shadow-lg border-l-4 border-CybertronixBlue card-hover focus-ring" tabindex="0" role="article" aria-label="Pilar de diseño: Comodidad Primero">
-                    <div class="text-5xl mb-3 transition-transform duration-300 hover:scale-110">🥇</div>
-                    <h3 class="text-2xl font-bold mb-3 text-CybertronixBlue">Comodidad Primero</h3>
-                    <p class="text-accentGray leading-relaxed">La prioridad #1 es <span class="font-semibold text-darkText bg-blue-50 px-1 rounded">cero mareo</span>. El diseño por defecto es sentado, con teletransporte y giro "snap-turn" para una accesibilidad total.</p>
-                </div>
-                <!-- Pilar 2: Accesibilidad -->
-                <div class="bg-cardBg p-6 rounded-xl shadow-lg border-l-4 border-CybertronixGreen card-hover focus-ring" tabindex="0" role="article" aria-label="Pilar de diseño: Interacción Accesible">
-                    <div class="text-5xl mb-3 transition-transform duration-300 hover:scale-110">✋</div>
-                    <h3 class="text-2xl font-bold mb-3 text-CybertronixGreen">Interacción Accesible</h3>
-                    <p class="text-accentGray leading-relaxed">UI simple con iconos grandes. El agarre <span class="font-semibold text-darkText bg-green-50 px-1 rounded">"toggle"</span> (presionar una vez) evita la fatiga en manos con debilidad.</p>
-                </div>
-                <!-- Pilar 3: Inmersión -->
-                <div class="bg-cardBg p-6 rounded-xl shadow-lg border-l-4 border-CybertronixBlue card-hover focus-ring" tabindex="0" role="article" aria-label="Pilar de diseño: Entorno Amigable">
-                    <div class="text-5xl mb-3 transition-transform duration-300 hover:scale-110">🌌</div>
-                    <h3 class="text-2xl font-bold mb-3 text-CybertronixBlue">Entorno Amigable</h3>
-                    <p class="text-accentGray leading-relaxed">Entornos brillantes, coloridos y relajantes. Evitamos diseños <span class="font-semibold text-darkText bg-blue-50 px-1 rounded">"clínicos" u "hospitalarios"</span> para reducir la ansiedad.</p>
-                </div>
-            </div>
-        </section>
+		<section class="section" id="detalles">
+			<div class="section-header">
+				<div>
+					<h2>Detalle por tipología</h2>
+					<div class="subtitle">
+						Cada bloque resume los subtipos de la hoja respectiva para que puedas bajar desde la tabla general a una lectura más específica.
+					</div>
+				</div>
+				<div class="badge">Acceso rápido a subtipos</div>
+			</div>
+			<div class="details-grid" id="detail-grid"></div>
+		</section>
+	</div>
 
-        <!-- Sección 2: Flujo de Experiencia -->
-        <section class="scroll-reveal">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">La Experiencia del Paciente</h2>
-            <div class="flex flex-col items-center space-y-6">
-                <div class="bg-cardBg p-8 rounded-xl shadow-lg w-full md:w-3/4 text-center card-hover border-2 border-transparent hover:border-CybertronixBlue transition-all focus-ring" tabindex="0">
-                    <span class="inline-block text-xs font-semibold text-white bg-CybertronixBlue px-3 py-1 rounded-full uppercase mb-3">Paso 1</span>
-                    <h3 class="text-2xl font-bold mb-2">Tutorial de Bienvenida</h3>
-                    <p class="text-accentGray leading-relaxed">Una voz guía enseña a moverse y agarrar en un entorno seguro.</p>
-                </div>
-                <div class="text-4xl font-thin text-accentGray animate-bounce">↓</div>
-                <div class="bg-gradient-to-br from-CybertronixBlue to-blue-500 text-white p-10 rounded-xl shadow-2xl w-full md:w-3/4 text-center card-hover focus-ring" tabindex="0">
-                    <span class="inline-block text-xs font-semibold bg-white bg-opacity-20 px-3 py-1 rounded-full uppercase mb-3">Paso 2 • Principal</span>
-                    <h3 class="text-2xl font-bold mb-2">Sala Inicio (Hub Central)</h3>
-                    <p class="opacity-90 leading-relaxed">Un espacio relajante para elegir la actividad de terapia del día.</p>
-                </div>
-                <div class="text-4xl font-thin text-accentGray animate-bounce" style="animation-delay: 0.2s">↓</div>
-                <div class="bg-cardBg p-8 rounded-xl shadow-lg w-full md:w-3/4 text-center card-hover border-2 border-transparent hover:border-CybertronixGreen transition-all focus-ring" tabindex="0">
-                    <span class="inline-block text-xs font-semibold text-white bg-CybertronixGreen px-3 py-1 rounded-full uppercase mb-3">Paso 3</span>
-                    <h3 class="text-2xl font-bold mb-2">Salas de Actividades</h3>
-                    <p class="text-accentGray leading-relaxed">Minijuegos terapéuticos diseñados para objetivos específicos.</p>
-                </div>
-            </div>
-        </section>
+	<script>
+		const typologies = [
+			{
+				sheet: 'GNC',
+				title: 'Nuevo Conocimiento',
+				anchor: 'nuevo-conocimiento',
+				total: 1016,
+				window: 552,
+				children: [
+					{ name: 'Artículo', total: 605, window: 324 },
+					{ name: 'Capítulo de libro', total: 214, window: 128 },
+					{ name: 'Libro', total: 197, window: 100 }
+				]
+			},
+			{
+				sheet: 'FRH',
+				title: 'Formación RH',
+				anchor: 'formacion-rh',
+				total: 2052,
+				window: 1041,
+				children: [
+					{ name: 'Pregrado', total: 1499, window: 779 },
+					{ name: 'Maestría o Especialidad Clínica', total: 330, window: 181 },
+					{ name: 'Monografía de Conclusión de Curso de Perfeccionamiento/Especialización', total: 85, window: 33 },
+					{ name: 'Doctorado', total: 68, window: 22 },
+					{ name: 'Otro Tipo', total: 67, window: 25 },
+					{ name: 'Iniciación Científica', total: 3, window: 1 }
+				]
+			},
+			{
+				sheet: 'PASC',
+				title: 'Apropiación Social (PASC)',
+				anchor: 'pasc',
+				total: 141,
+				window: 88,
+				children: [
+					{ name: 'Espacios de Participación Ciudadana', total: 65, window: 14 },
+					{ name: 'Procesos de apropiación social del Conocimiento para el fortalecimiento o solución de asuntos de interés social', total: 58, window: 56 },
+					{ name: 'Proceso de Apropiación Social del Conocimiento para la generación de insumos de política pública y normatividad', total: 18, window: 18 }
+				]
+			},
+			{
+				sheet: 'DP',
+				title: 'Divulgación Pública (DP)',
+				anchor: 'dp',
+				total: 1351,
+				window: 393,
+				children: [
+					{ name: 'Consultorías científico-tecnológicas', total: 602, window: 175 },
+					{ name: 'Estrategias de Comunicación del Conocimiento', total: 192, window: 22 },
+					{ name: 'Informes técnicos', total: 123, window: 57 },
+					{ name: 'Generación de Contenido Virtual', total: 108, window: 26 },
+					{ name: 'Producciones de contenido digital - Audiovisual', total: 75, window: 75 },
+					{ name: 'Documentos de trabajo', total: 74, window: 17 },
+					{ name: 'Generación de Contenido Impreso', total: 70, window: 1 },
+					{ name: 'Otra publicación divulgativa', total: 58, window: 13 },
+					{ name: 'Generación de Contenido Multimedia', total: 29, window: 3 },
+					{ name: 'Otros Libros publicados', total: 11, window: 1 },
+					{ name: 'Manuales y Guías Especializadas', total: 5, window: 0 },
+					{ name: 'Publicaciones editoriales no especializadas', total: 2, window: 2 },
+					{ name: 'Talleres de Creación', total: 1, window: 0 },
+					{ name: 'Producciones de contenido digital - Sonoro', total: 1, window: 1 }
+				]
+			},
+			{
+				sheet: 'DP_EVENTOS_CIENTIFICOS',
+				title: 'Eventos Científicos',
+				anchor: 'eventos-cientificos',
+				total: 1848,
+				window: 953,
+				children: [
+					{ name: 'Otro', total: 477, window: 279 },
+					{ name: 'Encuentro', total: 417, window: 198 },
+					{ name: 'Congreso', total: 409, window: 175 },
+					{ name: 'Seminario', total: 277, window: 92 },
+					{ name: 'Taller', total: 200, window: 167 },
+					{ name: 'Simposio', total: 68, window: 42 }
+				]
+			},
+			{
+				sheet: 'DTeI',
+				title: 'Desarrollo Tecnológico e Innovación',
+				anchor: 'dtei',
+				total: 923,
+				window: 729,
+				children: [
+					{ name: 'Conceptos técnicos', total: 651, window: 565 },
+					{ name: 'Regulaciones y Normas', total: 154, window: 95 },
+					{ name: 'Innovaciones en Procesos y Procedimientos', total: 61, window: 48 },
+					{ name: 'Innovaciones generadas en la Gestión Empresarial', total: 30, window: 9 },
+					{ name: 'Softwares', total: 24, window: 10 },
+					{ name: 'Empresas de base tecnológica', total: 3, window: 2 }
+				]
+			}
+		];
 
-        <!-- Sección 3: El Corazón de la Terapia (Datos) -->
-        <section id="therapy" class="scroll-reveal">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">El Corazón de la Terapia</h2>
-            <p class="text-lg text-accentGray text-center mb-10 max-w-2xl mx-auto leading-relaxed">
-                Cada actividad es un "Exergame" diseñado para un objetivo terapéutico. <strong class="text-darkText">Selecciona una actividad</strong> para ver su perfil de enfoque.
-            </p>
-            
-            <!-- Botones de Selección -->
-            <div id="therapy-buttons" class="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-3 mb-10" role="tablist" aria-label="Seleccionar actividad terapéutica">
-                <button data-therapy="gimnasia" class="therapy-btn active bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="true" aria-controls="therapy-chart">🏋️ Gimnasia</button>
-                <button data-therapy="rumba" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">💃 Rumba</button>
-                <button data-therapy="bolos" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">🎳 Bolos</button>
-                <button data-therapy="espadas" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">⚔️ Espadas</button>
-                <button data-therapy="basket" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">🏀 Basket</button>
-                <button data-therapy="disparo" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">🎯 Disparo</button>
-                <button data-therapy="boxeo" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">🥊 Boxeo</button>
-                <button data-therapy="meditacion" class="therapy-btn bg-white shadow border border-gray-200 text-CybertronixBlue font-semibold py-3 px-5 rounded-full" role="tab" aria-selected="false" aria-controls="therapy-chart">🧘 Meditación</button>
-            </div>
+		const totalHistorical = typologies.reduce((sum, item) => sum + item.total, 0);
+		const totalWindow = typologies.reduce((sum, item) => sum + item.window, 0);
+		const totalSubtypes = typologies.reduce((sum, item) => sum + item.children.length, 0);
 
-            <!-- Gráfico y Contexto -->
-            <div class="bg-cardBg p-8 rounded-2xl shadow-2xl border border-gray-100" id="therapy-chart" role="tabpanel">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                    <div class="chart-container-radar order-2 lg:order-1">
-                        <canvas id="therapyRadarChart" aria-label="Gráfico de enfoque terapéutico"></canvas>
-                    </div>
-                    <div id="therapy-context" class="animate-fade-in order-1 lg:order-2">
-                        <div class="inline-block bg-CybertronixBlue bg-opacity-10 text-CybertronixBlue px-4 py-2 rounded-full text-sm font-semibold mb-4">Perfil Terapéutico</div>
-                        <h3 id="therapy-title" class="text-3xl md:text-4xl font-bold text-CybertronixBlue mb-4"></h3>
-                        <p id="therapy-description" class="text-lg text-accentGray leading-relaxed"></p>
-                    </div>
-                </div>
-            </div>
-        </section>
+		const statData = [
+			{
+				label: 'Registros históricos',
+				value: totalHistorical.toLocaleString('es-CO'),
+				detail: 'Suma de las seis hojas consolidadas.'
+			},
+			{
+				label: 'Registros 2020-2025',
+				value: totalWindow.toLocaleString('es-CO'),
+				detail: 'Ventana homogénea para lectura ejecutiva.'
+			},
+			{
+				label: 'Tipologías analizadas',
+				value: typologies.length.toString(),
+				detail: 'Nuevo Conocimiento, FRH, PASC, DP, Eventos Científicos y DTeI.'
+			},
+			{
+				label: 'Subtipos consolidados',
+				value: totalSubtypes.toString(),
+				detail: 'Detalle por corte o subtipo dentro de cada hoja.'
+			}
+		];
 
-        <!-- Sección 4: Plataforma y Rendimiento -->
-        <section class="scroll-reveal">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Rendimiento y Plataforma</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                <div class="bg-cardBg p-8 rounded-xl shadow-lg card-hover">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="text-4xl">🎮</span>
-                        <h3 class="text-2xl font-bold">Plataformas Objetivo</h3>
-                    </div>
-                    <p class="text-accentGray mb-6 leading-relaxed">El desarrollo se centra en la plataforma <span class="font-semibold text-darkText bg-blue-50 px-2 py-1 rounded">Meta Quest 2</span> debido a su gran base instalada, asegurando compatibilidad con Quest 3.</p>
-                    <div class="chart-container">
-                        <canvas id="platformBarChart" aria-label="Gráfico de prioridad de plataformas"></canvas>
-                    </div>
-                </div>
-                 <div class="space-y-4">
-                    <div class="bg-gradient-to-br from-CybertronixBlue to-blue-500 text-white p-6 rounded-xl shadow-lg card-hover flex items-center gap-4">
-                        <span class="text-5xl">📈</span>
-                        <div>
-                            <h4 class="text-xl font-bold mb-1">FPS Objetivo: <span class="count-animation text-3xl">72-90</span></h4>
-                            <p class="opacity-90 text-sm">Un framerate estable es vital para prevenir el mareo.</p>
-                        </div>
-                    </div>
-                    <div class="bg-cardBg p-6 rounded-xl shadow-lg card-hover flex items-center gap-4 border-l-4 border-CybertronixGreen">
-                        <span class="text-5xl transition-transform duration-300 hover:scale-110">💡</span>
-                        <div>
-                            <h4 class="text-xl font-bold mb-1">Iluminación Optimizada</h4>
-                            <p class="text-accentGray text-sm">Uso de "Baked Lighting" para máximo rendimiento en móvil.</p>
-                        </div>
-                    </div>
-                    <div class="bg-cardBg p-6 rounded-xl shadow-lg card-hover flex items-center gap-4 border-l-4 border-CybertronixBlue">
-                        <span class="text-5xl transition-transform duration-300 hover:scale-110">👁️</span>
-                        <div>
-                            <h4 class="text-xl font-bold mb-1">Renderizado SPIR</h4>
-                            <p class="text-accentGray text-sm">Single-Pass Instanced Rendering para renderizar ambos ojos a la vez.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+		const statsContainer = document.getElementById('stats');
+		statsContainer.innerHTML = statData.map(item => `
+			<article class="stat">
+				<div class="label">${item.label}</div>
+				<div class="value">${item.value}</div>
+				<div class="detail">${item.detail}</div>
+			</article>
+		`).join('');
 
-        <!-- Sección 5: Estrategia de Validación -->
-        <section class="scroll-reveal">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Estrategia de Validación</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="bg-cardBg p-6 rounded-xl shadow-lg text-center card-hover focus-ring" tabindex="0" role="article">
-                    <div class="bg-CybertronixBlue text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">1</div>
-                    <h4 class="font-bold text-lg mb-2">Prototipo de Confort</h4>
-                    <p class="text-sm text-accentGray leading-relaxed">Probar solo locomoción. Métrica: Cero mareos.</p>
-                </div>
-                <div class="bg-cardBg p-6 rounded-xl shadow-lg text-center card-hover focus-ring" tabindex="0" role="article">
-                    <div class="bg-CybertronixBlue text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">2</div>
-                    <h4 class="font-bold text-lg mb-2">Prototipo de Interacción</h4>
-                    <p class="text-sm text-accentGray leading-relaxed">Probar agarre "toggle" y UI. Métrica: Cero fatiga.</p>
-                </div>
-                <div class="bg-cardBg p-6 rounded-xl shadow-lg text-center card-hover focus-ring" tabindex="0" role="article">
-                    <div class="bg-CybertronixBlue text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">3</div>
-                    <h4 class="font-bold text-lg mb-2">Bucle de Juego</h4>
-                    <p class="text-sm text-accentGray leading-relaxed">Probar una sala completa con audio y feedback.</p>
-                </div>
-                <div class="bg-gradient-to-br from-CybertronixGreen to-green-400 text-white p-6 rounded-xl shadow-xl text-center card-hover focus-ring" tabindex="0" role="article">
-                    <div class="bg-white text-CybertronixGreen w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">✓</div>
-                    <h4 class="font-bold text-lg mb-2">Validación Clínica</h4>
-                    <p class="text-sm opacity-95 leading-relaxed">Pruebas supervisadas por fisioterapeutas reales.</p>
-                </div>
-            </div>
-        </section>
+		const summaryRows = [];
+		typologies.forEach(item => {
+			summaryRows.push(`
+				<tr class="total-row" id="${item.anchor}">
+					<td><div class="typology-cell">${item.title}</div></td>
+					<td><div class="typology-cell">TOTAL ${item.title.toUpperCase()}</div></td>
+					<td>${item.total.toLocaleString('es-CO')}</td>
+					<td>${item.window.toLocaleString('es-CO')}</td>
+					<td><a class="navlink" href="#${item.anchor}-detail">Ver detalles</a></td>
+				</tr>
+			`);
+			item.children.forEach(child => {
+				summaryRows.push(`
+					<tr>
+						<td>${item.title}</td>
+						<td>${child.name}</td>
+						<td>${child.total.toLocaleString('es-CO')}</td>
+						<td>${child.window.toLocaleString('es-CO')}</td>
+						<td><a class="navlink" href="#${item.anchor}-detail">Ver detalles</a></td>
+					</tr>
+				`);
+			});
+		});
 
-    </main>
+		document.getElementById('summary-table').innerHTML = summaryRows.join('');
 
-    <footer class="text-center p-12 mt-24 bg-gradient-to-t from-gray-50 to-transparent border-t border-gray-200">
-        <div class="max-w-5xl mx-auto">
-            <img src="image_43fcab.png" alt="Logo de Cybertronix" class="h-12 w-auto mx-auto mb-4 opacity-60" onerror="this.src='https://placehold.co/200x80/10BAD4/white?text=Cybertronix'">
-            <p class="text-accentGray mb-2">&copy; 2025 Cybertronix. Todos los derechos reservados.</p>
-            <p class="text-sm text-accentGray">Transformando la rehabilitación física con realidad virtual</p>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            const therapyData = {
-                labels: [
-                    ['Mov. Brazo/', 'Hombro'], 
-                    'Rotación Torso', 
-                    ['Mov. Cuello/', 'Cabeza'], 
-                    ['Mov. Finos', '(Mano)'], 
-                    'Cardio/Ritmo', 
-                    ['Relajación/', 'Enfoque']
-                ],
-                datasets: {
-                    gimnasia: {
-                        label: 'Gimnasia (Escalar)',
-                        description: 'Ejercicio de extensión de brazos (dorsal, hombros), rotación de torso y coordinación mano-ojo.',
-                        data: [3, 2, 0, 1, 1, 0],
-                    },
-                    rumba: {
-                        label: 'Rumba Terapia',
-                        description: 'Movilidad de brazos, rotación de torso, movilidad de cuello/cabeza y ejercicio cardiovascular ligero.',
-                        data: [2, 2, 2, 0, 3, 0],
-                    },
-                    bolos: {
-                        label: 'Bolos',
-                        description: 'Movimiento controlado de hombro y brazo, coordinación y equilibrio.',
-                        data: [3, 1, 0, 1, 0, 0],
-                    },
-                    espadas: {
-                        label: 'Sala de Espadas',
-                        description: 'Rango de movimiento del brazo, velocidad de reacción, rotación del torso y seguimiento visual.',
-                        data: [3, 2, 1, 0, 2, 0],
-                    },
-                    basket: {
-                        label: 'Basket',
-                        description: 'Ejercicio de extensión de brazo, coordinación mano-ojo y cálculo de trayectoria.',
-                        data: [3, 0, 0, 1, 1, 0],
-                    },
-                    disparo: {
-                        label: 'Campo de Disparo',
-                        description: 'Precisión de mano, rotación de muñeca, seguimiento visual y movilidad de cabeza/cuello.',
-                        data: [1, 0, 2, 3, 0, 1],
-                    },
-                    boxeo: {
-                        label: 'Boxeo (Nuevo)',
-                        description: 'Ejercicio cardiovascular de alto impacto con movimientos controlados de brazo, hombro y rotación de torso.',
-                        data: [3, 3, 1, 0, 3, 0],
-                    },
-                    meditacion: {
-                        label: 'Meditación (Relajación)',
-                        description: 'Reducción del estrés, manejo del dolor y mejora de la concentración usando Terapia Auditiva (sonidos binaurales).',
-                        data: [0, 0, 0, 0, 0, 3],
-                    }
-                }
-            };
-
-            const tooltipTitleCallback = (tooltipItems) => {
-                const item = tooltipItems[0];
-                let label = item.chart.data.labels[item.dataIndex];
-                if (Array.isArray(label)) {
-                    return label.join(' ');
-                } else {
-                    return label;
-                }
-            };
-
-            let radarChart;
-            
-            function initRadarChart() {
-                const ctx = document.getElementById('therapyRadarChart').getContext('2d');
-                const initialData = therapyData.datasets.gimnasia;
-
-                radarChart = new Chart(ctx, {
-                    type: 'radar',
-                    data: {
-                        labels: therapyData.labels,
-                        datasets: [{
-                            label: initialData.label,
-                            data: initialData.data,
-                            fill: true,
-                            backgroundColor: 'rgba(195, 213, 42, 0.2)',
-                            borderColor: '#C3D52A',
-                            pointBackgroundColor: '#C3D52A',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: '#C3D52A'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    title: tooltipTitleCallback
-                                }
-                            }
-                        },
-                        scales: {
-                            r: {
-                                beginAtZero: true,
-                                max: 3,
-                                ticks: {
-                                    stepSize: 1,
-                                    display: false
-                                },
-                                pointLabels: {
-                                    font: {
-                                        size: 10
-                                    }
-                                },
-                                grid: {
-                                    color: '#e2e8f0'
-                                },
-                                angleLines: {
-                                    color: '#e2e8f0'
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            function updateRadarChart(therapyKey) {
-                const data = therapyData.datasets[therapyKey];
-                const titleEl = document.getElementById('therapy-title');
-                const descriptionEl = document.getElementById('therapy-description');
-
-                if (radarChart && data) {
-                    radarChart.data.datasets[0].data = data.data;
-                    radarChart.data.datasets[0].label = data.label;
-                    radarChart.update();
-
-                    titleEl.textContent = data.label;
-                    descriptionEl.textContent = data.description;
-                    
-                    titleEl.parentElement.classList.remove('animate-fade-in');
-                    void titleEl.parentElement.offsetWidth; 
-                    titleEl.parentElement.classList.add('animate-fade-in');
-                }
-            }
-            
-            function initPlatformChart() {
-                const ctx = document.getElementById('platformBarChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Meta Quest 2', 'Meta Quest 3'],
-                        datasets: [{
-                            label: 'Prioridad de Desarrollo',
-                            data: [95, 70], 
-                            backgroundColor: [
-                                '#10BAD4', 
-                                '#C3D52A' 
-                            ],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    title: (tooltipItems) => tooltipItems[0].label 
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                max: 100,
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    callback: (value) => value + '%'
-                                }
-                            },
-                            y: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            initRadarChart();
-            initPlatformChart();
-            updateRadarChart('gimnasia'); 
-
-            const buttons = document.querySelectorAll('.therapy-btn');
-            buttons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    buttons.forEach(b => {
-                        b.classList.remove('active');
-                        b.setAttribute('aria-selected', 'false');
-                    });
-                    btn.classList.add('active');
-                    btn.setAttribute('aria-selected', 'true');
-                    updateRadarChart(btn.dataset.therapy);
-                });
-                
-                // Keyboard navigation
-                btn.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        btn.click();
-                    }
-                });
-            });
-            
-            // Scroll reveal animations
-            const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
-            const scrollRevealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            scrollRevealElements.forEach(el => scrollRevealObserver.observe(el));
-            
-            // Parallax effect for header
-            const parallaxBg = document.querySelector('.parallax-bg');
-            if (parallaxBg) {
-                window.addEventListener('scroll', () => {
-                    const scrolled = window.pageYOffset;
-                    const rate = scrolled * 0.3;
-                    parallaxBg.style.transform = `translateY(${rate}px)`;
-                });
-            }
-            
-            // Smooth scroll for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-        });
-    </script>
+		document.getElementById('detail-grid').innerHTML = typologies.map(item => `
+			<article class="detail-card" id="${item.anchor}-detail">
+				<h3>${item.title}</h3>
+				<div class="detail-meta">
+					<span><strong>${item.total.toLocaleString('es-CO')}</strong> históricos</span>
+					<span>·</span>
+					<span><strong>${item.window.toLocaleString('es-CO')}</strong> en 2020-2025</span>
+				</div>
+				<table class="detail-mini">
+					<thead>
+						<tr>
+							<th>Subtipo</th>
+							<th>Histórico</th>
+							<th>2020-2025</th>
+						</tr>
+					</thead>
+					<tbody>
+						${item.children.map(child => `
+							<tr>
+								<td>${child.name}</td>
+								<td>${child.total.toLocaleString('es-CO')}</td>
+								<td>${child.window.toLocaleString('es-CO')}</td>
+							</tr>
+						`).join('')}
+					</tbody>
+				</table>
+			</article>
+		`).join('');
+	</script>
 </body>
 </html>
