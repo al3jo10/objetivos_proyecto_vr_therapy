@@ -316,13 +316,13 @@
 			<div class="eyebrow">Resumen general consolidado</div>
 			<h1>Tabla de resumen de GNC, FRH, PASC, DP, DP_EVENTOS_CIENTIFICOS y DTeI</h1>
 			<p>
-				Esta vista consolida las seis hojas de cálculo en una sola tabla ejecutiva con el histórico total y la ventana 2020-2025.
+				Esta vista consolida las seis hojas de cálculo en una sola tabla ejecutiva con el histórico completo de todos los años.
 				La estructura sigue tu referencia: tipología, subtipo o corte, totales y un acceso rápido a cada bloque.
 			</p>
 			<div class="meta">
 				<div class="pill">6 tipologías analizadas</div>
 				<div class="pill">7.331 registros históricos</div>
-				<div class="pill">3.756 registros en 2020-2025</div>
+				<div class="pill">Todos los años incluidos</div>
 				<div class="pill">44 filas consolidadas</div>
 			</div>
 		</section>
@@ -346,7 +346,7 @@
 							<th>Tipología</th>
 							<th>Subtipo o corte</th>
 							<th>Histórico</th>
-							<th>Ventana 2020-2025</th>
+							<th>Rango de años</th>
 							<th>Navegación</th>
 						</tr>
 					</thead>
@@ -355,7 +355,31 @@
 			</div>
 			<div class="note">
 				Los tres bloques con mayor volumen histórico son <strong>Formación RH</strong>, <strong>Eventos Científicos</strong> y <strong>Divulgación Pública (DP)</strong>.
-				En la ventana 2020-2025, destacan <strong>Formación RH</strong>, <strong>Eventos Científicos</strong> y <strong>DTeI</strong> por su mayor concentración de registros.
+				La lectura se hizo con todo el histórico disponible por hoja, no con una sola ventana temporal.
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="section-header">
+				<div>
+					<h2>Resumen anual consolidado</h2>
+					<div class="subtitle">
+						Total de registros por año sumando las seis hojas. Si un año aparece en más de una tipología, aquí queda consolidado en una sola fila.
+					</div>
+				</div>
+				<div class="badge">Todos los años detectados</div>
+			</div>
+			<div class="table-wrap">
+				<table style="min-width: 860px;">
+					<thead>
+						<tr>
+							<th>Año</th>
+							<th>Total consolidado</th>
+							<th>Participación sobre el histórico</th>
+						</tr>
+					</thead>
+					<tbody id="annual-table"></tbody>
+				</table>
 			</div>
 		</section>
 
@@ -380,11 +404,11 @@
 				title: 'Nuevo Conocimiento',
 				anchor: 'nuevo-conocimiento',
 				total: 1016,
-				window: 552,
+				years: '2004 - 2026',
 				children: [
-					{ name: 'Artículo', total: 605, window: 324 },
-					{ name: 'Capítulo de libro', total: 214, window: 128 },
-					{ name: 'Libro', total: 197, window: 100 }
+					{ name: 'Artículo', total: 605 },
+					{ name: 'Capítulo de libro', total: 214 },
+					{ name: 'Libro', total: 197 }
 				]
 			},
 			{
@@ -392,14 +416,14 @@
 				title: 'Formación RH',
 				anchor: 'formacion-rh',
 				total: 2052,
-				window: 1041,
+				years: '1999 - 2026',
 				children: [
-					{ name: 'Pregrado', total: 1499, window: 779 },
-					{ name: 'Maestría o Especialidad Clínica', total: 330, window: 181 },
-					{ name: 'Monografía de Conclusión de Curso de Perfeccionamiento/Especialización', total: 85, window: 33 },
-					{ name: 'Doctorado', total: 68, window: 22 },
-					{ name: 'Otro Tipo', total: 67, window: 25 },
-					{ name: 'Iniciación Científica', total: 3, window: 1 }
+					{ name: 'Pregrado', total: 1499 },
+					{ name: 'Maestría o Especialidad Clínica', total: 330 },
+					{ name: 'Monografía de Conclusión de Curso de Perfeccionamiento/Especialización', total: 85 },
+					{ name: 'Doctorado', total: 68 },
+					{ name: 'Otro Tipo', total: 67 },
+					{ name: 'Iniciación Científica', total: 3 }
 				]
 			},
 			{
@@ -407,11 +431,11 @@
 				title: 'Apropiación Social (PASC)',
 				anchor: 'pasc',
 				total: 141,
-				window: 88,
+				years: '2013 - 2025',
 				children: [
-					{ name: 'Espacios de Participación Ciudadana', total: 65, window: 14 },
-					{ name: 'Procesos de apropiación social del Conocimiento para el fortalecimiento o solución de asuntos de interés social', total: 58, window: 56 },
-					{ name: 'Proceso de Apropiación Social del Conocimiento para la generación de insumos de política pública y normatividad', total: 18, window: 18 }
+					{ name: 'Espacios de Participación Ciudadana', total: 65 },
+					{ name: 'Procesos de apropiación social del Conocimiento para el fortalecimiento o solución de asuntos de interés social', total: 58 },
+					{ name: 'Proceso de Apropiación Social del Conocimiento para la generación de insumos de política pública y normatividad', total: 18 }
 				]
 			},
 			{
@@ -419,22 +443,22 @@
 				title: 'Divulgación Pública (DP)',
 				anchor: 'dp',
 				total: 1351,
-				window: 393,
+				years: '1900 - 2025',
 				children: [
-					{ name: 'Consultorías científico-tecnológicas', total: 602, window: 175 },
-					{ name: 'Estrategias de Comunicación del Conocimiento', total: 192, window: 22 },
-					{ name: 'Informes técnicos', total: 123, window: 57 },
-					{ name: 'Generación de Contenido Virtual', total: 108, window: 26 },
-					{ name: 'Producciones de contenido digital - Audiovisual', total: 75, window: 75 },
-					{ name: 'Documentos de trabajo', total: 74, window: 17 },
-					{ name: 'Generación de Contenido Impreso', total: 70, window: 1 },
-					{ name: 'Otra publicación divulgativa', total: 58, window: 13 },
-					{ name: 'Generación de Contenido Multimedia', total: 29, window: 3 },
-					{ name: 'Otros Libros publicados', total: 11, window: 1 },
-					{ name: 'Manuales y Guías Especializadas', total: 5, window: 0 },
-					{ name: 'Publicaciones editoriales no especializadas', total: 2, window: 2 },
-					{ name: 'Talleres de Creación', total: 1, window: 0 },
-					{ name: 'Producciones de contenido digital - Sonoro', total: 1, window: 1 }
+					{ name: 'Consultorías científico-tecnológicas', total: 602 },
+					{ name: 'Estrategias de Comunicación del Conocimiento', total: 192 },
+					{ name: 'Informes técnicos', total: 123 },
+					{ name: 'Generación de Contenido Virtual', total: 108 },
+					{ name: 'Producciones de contenido digital - Audiovisual', total: 75 },
+					{ name: 'Documentos de trabajo', total: 74 },
+					{ name: 'Generación de Contenido Impreso', total: 70 },
+					{ name: 'Otra publicación divulgativa', total: 58 },
+					{ name: 'Generación de Contenido Multimedia', total: 29 },
+					{ name: 'Otros Libros publicados', total: 11 },
+					{ name: 'Manuales y Guías Especializadas', total: 5 },
+					{ name: 'Publicaciones editoriales no especializadas', total: 2 },
+					{ name: 'Talleres de Creación', total: 1 },
+					{ name: 'Producciones de contenido digital - Sonoro', total: 1 }
 				]
 			},
 			{
@@ -442,14 +466,14 @@
 				title: 'Eventos Científicos',
 				anchor: 'eventos-cientificos',
 				total: 1848,
-				window: 953,
+				years: '1989 - 2025',
 				children: [
-					{ name: 'Otro', total: 477, window: 279 },
-					{ name: 'Encuentro', total: 417, window: 198 },
-					{ name: 'Congreso', total: 409, window: 175 },
-					{ name: 'Seminario', total: 277, window: 92 },
-					{ name: 'Taller', total: 200, window: 167 },
-					{ name: 'Simposio', total: 68, window: 42 }
+					{ name: 'Otro', total: 477 },
+					{ name: 'Encuentro', total: 417 },
+					{ name: 'Congreso', total: 409 },
+					{ name: 'Seminario', total: 277 },
+					{ name: 'Taller', total: 200 },
+					{ name: 'Simposio', total: 68 }
 				]
 			},
 			{
@@ -457,20 +481,19 @@
 				title: 'Desarrollo Tecnológico e Innovación',
 				anchor: 'dtei',
 				total: 923,
-				window: 729,
+				years: '2003 - 2025',
 				children: [
-					{ name: 'Conceptos técnicos', total: 651, window: 565 },
-					{ name: 'Regulaciones y Normas', total: 154, window: 95 },
-					{ name: 'Innovaciones en Procesos y Procedimientos', total: 61, window: 48 },
-					{ name: 'Innovaciones generadas en la Gestión Empresarial', total: 30, window: 9 },
-					{ name: 'Softwares', total: 24, window: 10 },
-					{ name: 'Empresas de base tecnológica', total: 3, window: 2 }
+					{ name: 'Conceptos técnicos', total: 651 },
+					{ name: 'Regulaciones y Normas', total: 154 },
+					{ name: 'Innovaciones en Procesos y Procedimientos', total: 61 },
+					{ name: 'Innovaciones generadas en la Gestión Empresarial', total: 30 },
+					{ name: 'Softwares', total: 24 },
+					{ name: 'Empresas de base tecnológica', total: 3 }
 				]
 			}
 		];
 
 		const totalHistorical = typologies.reduce((sum, item) => sum + item.total, 0);
-		const totalWindow = typologies.reduce((sum, item) => sum + item.window, 0);
 		const totalSubtypes = typologies.reduce((sum, item) => sum + item.children.length, 0);
 
 		const statData = [
@@ -480,9 +503,9 @@
 				detail: 'Suma de las seis hojas consolidadas.'
 			},
 			{
-				label: 'Registros 2020-2025',
-				value: totalWindow.toLocaleString('es-CO'),
-				detail: 'Ventana homogénea para lectura ejecutiva.'
+				label: 'Años cubiertos',
+				value: '1989 - 2026',
+				detail: 'Rango total detectado en el archivo.'
 			},
 			{
 				label: 'Tipologías analizadas',
@@ -512,7 +535,7 @@
 					<td><div class="typology-cell">${item.title}</div></td>
 					<td><div class="typology-cell">TOTAL ${item.title.toUpperCase()}</div></td>
 					<td>${item.total.toLocaleString('es-CO')}</td>
-					<td>${item.window.toLocaleString('es-CO')}</td>
+					<td>${item.years}</td>
 					<td><a class="navlink" href="#${item.anchor}-detail">Ver detalles</a></td>
 				</tr>
 			`);
@@ -522,7 +545,7 @@
 						<td>${item.title}</td>
 						<td>${child.name}</td>
 						<td>${child.total.toLocaleString('es-CO')}</td>
-						<td>${child.window.toLocaleString('es-CO')}</td>
+						<td>${item.years}</td>
 						<td><a class="navlink" href="#${item.anchor}-detail">Ver detalles</a></td>
 					</tr>
 				`);
@@ -537,14 +560,14 @@
 				<div class="detail-meta">
 					<span><strong>${item.total.toLocaleString('es-CO')}</strong> históricos</span>
 					<span>·</span>
-					<span><strong>${item.window.toLocaleString('es-CO')}</strong> en 2020-2025</span>
+					<span><strong>${item.years}</strong></span>
 				</div>
 				<table class="detail-mini">
 					<thead>
 						<tr>
 							<th>Subtipo</th>
 							<th>Histórico</th>
-							<th>2020-2025</th>
+							<th>Rango de años</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -552,13 +575,104 @@
 							<tr>
 								<td>${child.name}</td>
 								<td>${child.total.toLocaleString('es-CO')}</td>
-								<td>${child.window.toLocaleString('es-CO')}</td>
+								<td>${item.years}</td>
 							</tr>
 						`).join('')}
 					</tbody>
 				</table>
 			</article>
 		`).join('');
+
+		const annualTotals = [
+			[1900, 1], [1989, 1], [1991, 3], [1992, 3], [1993, 1], [1994, 1], [1999, 1], [2000, 2], [2001, 2], [2002, 3],
+			[2003, 6], [2004, 10], [2005, 13], [2006, 24], [2007, 60], [2008, 43], [2009, 94], [2010, 87], [2011, 113], [2012, 169],
+			[2013, 210], [2014, 233], [2015, 270], [2016, 395], [2017, 631], [2018, 652], [2019, 506], [2020, 732], [2021, 447],
+			[2022, 779], [2023, 1097], [2024, 618], [2025, 83], [2026, 6]
+		];
+
+		document.getElementById('annual-table').innerHTML = annualTotals.map(([year, total]) => `
+			<tr>
+				<td>${year}</td>
+				<td>${total.toLocaleString('es-CO')}</td>
+				<td>${(total * 100 / totalHistorical).toFixed(1)}%</td>
+			</tr>
+		`).join('');
+
+		// Generar tabla única con GNC y todas las tipologías
+		const gncCard = `
+			<article class="detail-card" id="nuevo-conocimiento-detail">
+				<h3>Nuevo Conocimiento</h3>
+				<div class="detail-meta">
+					<span><strong>1.016</strong> históricos</span>
+					<span>·</span>
+					<span><strong>2004 - 2026</strong></span>
+				</div>
+				<table class="detail-mini">
+					<thead>
+						<tr>
+							<th>Tipo</th>
+							<th>Total</th>
+							<th>Grupos / Categorías</th>
+							<th>Rango de años</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><strong>Artículo</strong></td>
+							<td>605</td>
+							<td>A1: 65 · A2: 93 · B: 144 · C: 99 · N/R: 204</td>
+							<td>2004 - 2026</td>
+						</tr>
+						<tr>
+							<td><strong>Capítulo de libro</strong></td>
+							<td>214</td>
+							<td>Invius: 77 · Educación Y Currículo: 20 · Grupo Dcho. Humanos: 18 · ILA: 16 · Energías: 8 · Otros: 75</td>
+							<td>2004 - 2026</td>
+						</tr>
+						<tr>
+							<td><strong>Libro</strong></td>
+							<td>197</td>
+							<td>Invius: 70 · Grupo Empresa: 25 · Dcho/Cultura/Sociedad: 17 · Educación Y Currículo: 15 · ILA: 14 · Otros: 56</td>
+							<td>2004 - 2026</td>
+						</tr>
+					</tbody>
+				</table>
+			</article>
+		`;
+
+		const otherCards = typologies.slice(1).map(item => `
+			<article class="detail-card" id="${item.anchor}-detail">
+				<h3>${item.title}</h3>
+				<div class="detail-meta">
+					<span><strong>${item.total.toLocaleString('es-CO')}</strong> históricos</span>
+					<span>·</span>
+					<span><strong>${item.years}</strong></span>
+				</div>
+				<table class="detail-mini">
+					<thead>
+						<tr>
+							<th>Subtipo</th>
+							<th>Histórico</th>
+							<th>Rango de años</th>
+						</tr>
+					</thead>
+					<tbody>
+						${item.children.map(child => `
+							<tr>
+								<td>${child.name}</td>
+								<td>${child.total.toLocaleString('es-CO')}</td>
+								<td>${item.years}</td>
+							</tr>
+						`).join('')}
+					</tbody>
+				</table>
+			</article>
+		`).join('');
+
+		document.getElementById('detail-grid').innerHTML = gncCard + otherCards;
+	</script>
+</body>
+</html>
 	</script>
 </body>
 </html>
